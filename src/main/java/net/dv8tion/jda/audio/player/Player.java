@@ -103,6 +103,12 @@ public abstract class Player implements AudioSendHandler
     }
 
     @Override
+    public boolean isRaw()
+    {
+        return false;
+    }
+
+    @Override
     public byte[] provide20MsAudio()
     {
         if (audioSource == null || audioFormat == null)

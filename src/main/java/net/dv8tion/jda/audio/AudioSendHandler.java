@@ -18,5 +18,6 @@ package net.dv8tion.jda.audio;
 public interface AudioSendHandler
 {
     boolean canProvide();
+    boolean isRaw();
     byte[] provide20MsAudio();
 }

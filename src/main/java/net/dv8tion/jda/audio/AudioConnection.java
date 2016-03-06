@@ -164,7 +164,7 @@ public class AudioConnection
                                     setSpeaking(false);
                                 continue;
                             }
-                            byte[] encodedAudio = encodeToOpus(rawAudio);
+                            byte[] encodedAudio = sendHandler.isRaw() ? rawAudio : encodeToOpus(rawAudio);
                             AudioPacket packet = new AudioPacket(seq, timestamp, webSocket.getSSRC(), encodedAudio);
                             if (!speaking)
                                 setSpeaking(true);

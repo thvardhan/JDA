@@ -16,22 +16,19 @@
 
 import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.JDABuilder;
-import net.dv8tion.jda.audio.player.FilePlayer;
-import net.dv8tion.jda.audio.player.Player;
+import net.dv8tion.jda.audio.AudioSendHandler;
 import net.dv8tion.jda.entities.VoiceChannel;
 import net.dv8tion.jda.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.hooks.ListenerAdapter;
+import net.dv8tion.jda.utils.DCAUtil;
 
 import javax.security.auth.login.LoginException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 
 public class AudioExample extends ListenerAdapter
 {
 
-    private Player player = null;
+    private AudioSendHandler player = null;
 
     public static void main(String[] args)
     {
@@ -86,73 +83,19 @@ public class AudioExample extends ListenerAdapter
         if (message.equals("play"))
         {
             //If the player didn't exist, create it and start playback.
-            if (player == null)
+            if (player == null || !player.canProvide())
             {
-                File audioFile = null;
-                URL audioUrl = null;
-                try
-                {
-                    audioFile = new File("aac-41100.m4a");
-//                    audioUrl = new URL("https://dl.dropboxusercontent.com/u/41124983/anime-48000.mp3?dl=1");
-
-                    player = new FilePlayer(audioFile);
-//                    player = new URLPlayer(event.getJDA(), audioUrl);
-
-                    //Provide the handler to send audio.
-                    //NOTE: You don't have to set the handler each time you create an audio connection with the
-                    // AudioManager. Handlers persist between audio connections. Furthermore, handler playback is also
-                    // paused when a connection is severed (closeAudioConnection), however it would probably be better
-                    // to pause the play back yourself before severing the connection (If you are using a player class
-                    // you could just call the pause() method. Otherwise, make canProvide() return false).
-                    // Once again, you don't HAVE to pause before severing an audio connection,
-                    // but it probably would be good to do.
-                    event.getJDA().getAudioManager().setSendingHandler(player);
-
-                    //Start playback. This will only start after the AudioConnection has completely connected.
-                    //NOTE: "completely connected" is not just joining the VoiceChannel. Think about when your Discord
-                    // client joins a VoiceChannel. You appear in the channel lobby immediately, but it takes a few
-                    // moments before you can start communicating.
-                    player.play();
-                }
-                catch (IOException e)
-                {
-                    event.getChannel().sendMessage("Could not load the file. Does it exist?  File name: " + audioFile.getName());
-                    e.printStackTrace();
-                }
-                catch (UnsupportedAudioFileException e)
-                {
-                    event.getChannel().sendMessage("Could not load file. It either isn't an audio file or isn't a" +
-                            " recognized audio format.");
-                    e.printStackTrace();
-                }
+                File audioFile = new File("snowblind.dca");
+                player = DCAUtil.getSendHandlerForFile(audioFile);
+                event.getJDA().getAudioManager().setSendingHandler(player);
             }
-            else if (player.isStarted() && player.isStopped())  //If it did exist, has it been stop()'d before?
-            {
-                event.getChannel().sendMessage("The player has been stopped. To start playback, please use 'restart'");
-                return;
-            }
-            else    //It exists and hasn't been stopped before, so play. Note: if it was already playing, this will have no effect.
-            {
-                player.play();
-            }
-
         }
 
         //You can't pause, stop or restart before a player has even been created!
-        if (player == null && (message.equals("pause") || message.equals("stop") || message.equals("restart")))
+        if (player != null && message.equals("stop"))
         {
-            event.getChannel().sendMessage("You need to 'play' before you can preform that command.");
-            return;
-        }
-
-        if (player != null)
-        {
-            if (message.equals("pause"))
-                player.pause();
-            if (message.equals("stop"))
-                player.stop();
-            if (message.equals("restart"))
-                player.restart();
+            event.getJDA().getAudioManager().setSendingHandler(null);
+            player = null;
         }
     }
 }
