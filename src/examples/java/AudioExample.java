@@ -16,7 +16,7 @@
 
 import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.JDABuilder;
-import net.dv8tion.jda.audio.AudioSendHandler;
+import net.dv8tion.jda.audio.player.Player;
 import net.dv8tion.jda.entities.VoiceChannel;
 import net.dv8tion.jda.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.hooks.ListenerAdapter;
@@ -28,7 +28,7 @@ import java.io.File;
 public class AudioExample extends ListenerAdapter
 {
 
-    private AudioSendHandler player = null;
+    private Player player = null;
 
     public static void main(String[] args)
     {
@@ -85,16 +85,24 @@ public class AudioExample extends ListenerAdapter
             //If the player didn't exist, create it and start playback.
             if (player == null || !player.canProvide())
             {
-                File audioFile = new File("snowblind.dca");
-                player = DCAUtil.getSendHandlerForFile(audioFile);
-                event.getJDA().getAudioManager().setSendingHandler(player);
+                if (player == null || player.isStopped())
+                {
+                    File audioFile = new File("snowblind.dca");
+                    player = new DCAUtil.DCAPlayer(audioFile);
+                    event.getJDA().getAudioManager().setSendingHandler(player);
+                }
+                player.play();
             }
+        }
+        else if (player != null && !player.isStopped() && message.equals("pause"))
+        {
+            player.pause();
         }
 
         //You can't pause, stop or restart before a player has even been created!
-        if (player != null && message.equals("stop"))
+        else if (player != null && message.equals("stop"))
         {
-            event.getJDA().getAudioManager().setSendingHandler(null);
+            player.stop();
             player = null;
         }
     }

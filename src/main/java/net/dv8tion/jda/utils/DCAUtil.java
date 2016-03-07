@@ -15,7 +15,6 @@
  */
 package net.dv8tion.jda.utils;
 
-import net.dv8tion.jda.audio.AudioSendHandler;
 import net.dv8tion.jda.audio.player.Player;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,19 +29,6 @@ import java.nio.charset.StandardCharsets;
 public class DCAUtil
 {
     private DCAUtil(){}
-
-    public static AudioSendHandler getSendHandlerForFile(File dcaFile)
-    {
-        try
-        {
-            return new DCAPlayer(new DCAReader(new FileInputStream(dcaFile)));
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
     public static class DCAPlayer extends Player {
         private  DCAReader reader;
@@ -70,11 +56,13 @@ public class DCAUtil
         @Override
         public boolean canProvide()
         {
+            if (stopped)
+            {
+                return false;
+            }
             if (reader.atEnd())
             {
-                started = false;
-                paused = false;
-                reader.close();
+                stop();
                 return false;
             }
             return started && !paused;
@@ -97,7 +85,7 @@ public class DCAUtil
         {
             if (stopped)
             {
-                restart();
+                throw new UnsupportedOperationException("Can not restart a dca-stream after it got stopped");
             }
             started = true;
             paused = false;
@@ -115,15 +103,13 @@ public class DCAUtil
             started = false;
             paused = false;
             stopped = true;
+            reader.close();
         }
 
         @Override
         public void restart()
         {
-            reader.reset();
-            stopped = false;
-            started = false;
-            paused = false;
+            throw new UnsupportedOperationException("Restarting DCA-streams is not possible!");
         }
 
         @Override
@@ -187,10 +173,6 @@ public class DCAUtil
                 if(inStr.read(buff) != length)
                     throw new IOException("Could not write meta-block");
                 info = new JSONObject(new String(buff, StandardCharsets.UTF_8));
-                if (inStr.markSupported())
-                {
-                    inStr.mark(Integer.MAX_VALUE);
-                }
             }
             catch (IOException | JSONException e)
             {
@@ -198,23 +180,6 @@ public class DCAUtil
                 close();
                 throw e;
             }
-        }
-
-        public void reset()
-        {
-            if (inStr.markSupported())
-            {
-                try
-                {
-                    inStr.reset();
-                    return;
-                }
-                catch (IOException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-            throw new UnsupportedOperationException("Given InputStream does not allow resets!");
         }
 
         public boolean atEnd() {
