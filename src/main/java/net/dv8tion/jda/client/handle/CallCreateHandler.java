@@ -16,10 +16,15 @@
 
 package net.dv8tion.jda.client.handle;
 
+import gnu.trove.map.TLongObjectMap;
 import net.dv8tion.jda.client.entities.CallUser;
 import net.dv8tion.jda.client.entities.CallableChannel;
 import net.dv8tion.jda.client.entities.Group;
-import net.dv8tion.jda.client.entities.impl.*;
+import net.dv8tion.jda.client.entities.impl.CallImpl;
+import net.dv8tion.jda.client.entities.impl.CallUserImpl;
+import net.dv8tion.jda.client.entities.impl.CallVoiceStateImpl;
+import net.dv8tion.jda.client.entities.impl.GroupImpl;
+import net.dv8tion.jda.client.entities.impl.JDAClientImpl;
 import net.dv8tion.jda.core.Region;
 import net.dv8tion.jda.core.entities.impl.JDAImpl;
 import net.dv8tion.jda.core.entities.impl.PrivateChannelImpl;
@@ -29,8 +34,6 @@ import net.dv8tion.jda.core.requests.WebSocketClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-
 public class CallCreateHandler extends SocketHandler
 {
     public CallCreateHandler(JDAImpl api)
@@ -39,10 +42,10 @@ public class CallCreateHandler extends SocketHandler
     }
 
     @Override
-    protected String handleInternally(JSONObject content)
+    protected Long handleInternally(JSONObject content)
     {
-        String channelId = content.getString("channel_id");
-        String messageId = content.getString("message_id");
+        final long channelId = Long.parseLong(content.getString("channel_id"));
+        final long messageId = Long.parseLong(content.getString("message_id"));
         Region region = Region.fromKey(content.getString("region"));
         JSONArray voiceStates = content.getJSONArray("voice_states");
         JSONArray ringing = content.getJSONArray("ringing");
@@ -59,7 +62,7 @@ public class CallCreateHandler extends SocketHandler
 
         CallImpl call = new CallImpl(channel, messageId);
         call.setRegion(region);
-        HashMap<String, CallUser> callUsers = call.getCallUserMap();
+        TLongObjectMap<CallUser> callUsers = call.getCallUserMap();
 
         if (channel instanceof Group)
         {
@@ -67,19 +70,22 @@ public class CallCreateHandler extends SocketHandler
             if (group.getCurrentCall() != null)
                 WebSocketClient.LOG.fatal("Received a CALL_CREATE for a Group that already has an active call cached! JSON: " + content);
             group.setCurrentCall(call);
-            group.getUserMap().forEach((userId, user) ->
+            group.getUserMap().forEachEntry((userId, user) ->
             {
                 CallUserImpl callUser = new CallUserImpl(call, user);
                 callUsers.put(userId, callUser);
 
                 for (int i = 0; i < ringing.length(); i++)
                 {
-                    if (ringing.getString(i).equals(userId))
+                    final long current = Long.parseLong(ringing.getString(i));
+                    if (current == userId)
                     {
                         callUser.setRinging(true);
                         break;
                     }
                 }
+
+                return true;
             });
         }
         else
@@ -88,14 +94,14 @@ public class CallCreateHandler extends SocketHandler
             if (priv.getCurrentCall() != null)
                 WebSocketClient.LOG.fatal("Received a CALL_CREATE for a PrivateChannel that already has an active call cached! JSON: " + content);
             priv.setCurrentCall(call);
-            callUsers.put(priv.getUser().getId(), new CallUserImpl(call, priv.getUser()));
-            callUsers.put(api.getSelfUser().getId(), new CallUserImpl(call, api.getSelfUser()));
+            callUsers.put(priv.getUser().getIdLong(), new CallUserImpl(call, priv.getUser()));
+            callUsers.put(api.getSelfUser().getIdLong(), new CallUserImpl(call, api.getSelfUser()));
         }
 
         for (int i = 0; i < voiceStates.length(); i++)
         {
             JSONObject voiceState = voiceStates.getJSONObject(i);
-            String userId = voiceState.getString("user_id");
+            final long userId = Long.parseLong(voiceState.getString("user_id"));
             CallUser cUser = callUsers.get(userId);
             CallVoiceStateImpl vState = (CallVoiceStateImpl) cUser.getVoiceState();
 

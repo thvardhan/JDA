@@ -1319,16 +1319,11 @@ public class GuildController
             throw new IllegalArgumentException("Cannot add the PublicRole of a Guild to a Member. All members have this role by default!");
 
         //Make sure that the current managed roles are preserved and no new ones are added.
-        List<Role> currentManaged = roles.stream().filter(r -> r.isManaged()).collect(Collectors.toList());
-        List<Role> newManaged = roles.stream().filter(r -> r.isManaged()).collect(Collectors.toList());
+        List<Role> currentManaged = roles.stream().filter(Role::isManaged).collect(Collectors.toList());
+        List<Role> newManaged = roles.stream().filter(Role::isManaged).collect(Collectors.toList());
         if (currentManaged.size() != 0 || newManaged.size() != 0)
         {
-            for (Iterator<Role> it = currentManaged.iterator(); it.hasNext();)
-            {
-                Role r = it.next();
-                if (newManaged.contains(r))
-                    it.remove();
-            }
+            currentManaged.removeIf(newManaged::contains);
 
             if (currentManaged.size() > 0)
                 throw new IllegalArgumentException("Cannot remove managed roles from a member! Roles: " + currentManaged.toString());
@@ -1687,7 +1682,7 @@ public class GuildController
                 if (response.isOk())
                 {
                     JSONObject obj = response.getObject();
-                    String id = obj.getString("id");
+                    final long id = Long.parseLong(obj.getString("id"));
                     String name = obj.getString("name");
                     EmoteImpl emote = new EmoteImpl(id, guild).setName(name);
                     // managed is false by default, should always be false for emotes created by client accounts.

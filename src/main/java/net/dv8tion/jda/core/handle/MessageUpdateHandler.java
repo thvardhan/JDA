@@ -19,7 +19,13 @@ import net.dv8tion.jda.client.entities.Group;
 import net.dv8tion.jda.client.events.message.group.GroupMessageEmbedEvent;
 import net.dv8tion.jda.client.events.message.group.GroupMessageUpdateEvent;
 import net.dv8tion.jda.core.AccountType;
-import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.core.entities.EntityBuilder;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.MessageChannel;
+import net.dv8tion.jda.core.entities.MessageEmbed;
+import net.dv8tion.jda.core.entities.MessageType;
+import net.dv8tion.jda.core.entities.PrivateChannel;
+import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.impl.JDAImpl;
 import net.dv8tion.jda.core.events.message.MessageEmbedEvent;
 import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
@@ -43,7 +49,7 @@ public class MessageUpdateHandler extends SocketHandler
     }
 
     @Override
-    protected String handleInternally(JSONObject content)
+    protected Long handleInternally(JSONObject content)
     {
         if (content.has("author"))
         {
@@ -76,7 +82,7 @@ public class MessageUpdateHandler extends SocketHandler
             return handleMessageEmbed(content);
     }
 
-    private String handleDefaultMessage(JSONObject content)
+    private Long handleDefaultMessage(JSONObject content)
     {
         Message message;
         try
@@ -89,19 +95,15 @@ public class MessageUpdateHandler extends SocketHandler
             {
                 case EntityBuilder.MISSING_CHANNEL:
                 {
-                    EventCache.get(api).cache(EventCache.Type.CHANNEL, content.getString("channel_id"), () ->
-                    {
-                        handle(responseNumber, allContent);
-                    });
+                    final long channelId = Long.parseLong(content.getString("channel_id"));
+                    EventCache.get(api).cache(EventCache.Type.CHANNEL, channelId, () -> handle(responseNumber, allContent));
                     EventCache.LOG.debug("Received a message update for a channel that JDA does not currently have cached");
                     return null;
                 }
                 case EntityBuilder.MISSING_USER:
                 {
-                    EventCache.get(api).cache(EventCache.Type.USER, content.getJSONObject("author").getString("id"), () ->
-                    {
-                        handle(responseNumber, allContent);
-                    });
+                    final long authorId = Long.parseLong(content.getJSONObject("author").getString("id"));
+                    EventCache.get(api).cache(EventCache.Type.USER, authorId, () -> handle(responseNumber, allContent));
                     EventCache.LOG.debug("Received a message update for a user that JDA does not currently have cached");
                     return null;
                 }
@@ -115,9 +117,9 @@ public class MessageUpdateHandler extends SocketHandler
             case TEXT:
             {
                 TextChannel channel = message.getTextChannel();
-                if (GuildLock.get(api).isLocked(channel.getGuild().getId()))
+                if (GuildLock.get(api).isLocked(channel.getGuild().getIdLong()))
                 {
-                    return channel.getGuild().getId();
+                    return channel.getGuild().getIdLong();
                 }
                 api.getEventManager().handle(
                         new GuildMessageUpdateEvent(
@@ -154,11 +156,12 @@ public class MessageUpdateHandler extends SocketHandler
         return null;
     }
 
-    private String handleMessageEmbed(JSONObject content)
+    private Long handleMessageEmbed(JSONObject content)
     {
         EntityBuilder builder = EntityBuilder.get(api);
-        String messageId = content.getString("id");
-        String channelId = content.getString("channel_id");
+        final String messageIdString = content.getString("id");
+        final long messageId = Long.parseLong(messageIdString);
+        final long channelId = Long.parseLong(content.getString("channel_id"));
         LinkedList<MessageEmbed> embeds = new LinkedList<>();
         MessageChannel channel = api.getTextChannelMap().get(channelId);
         if (channel == null)
@@ -186,34 +189,34 @@ public class MessageUpdateHandler extends SocketHandler
         if (channel instanceof TextChannel)
         {
             TextChannel tChannel = (TextChannel) channel;
-            if (GuildLock.get(api).isLocked(tChannel.getGuild().getId()))
+            if (GuildLock.get(api).isLocked(tChannel.getGuild().getIdLong()))
             {
-                return tChannel.getGuild().getId();
+                return tChannel.getGuild().getIdLong();
             }
             api.getEventManager().handle(
                     new GuildMessageEmbedEvent(
                             api, responseNumber,
-                            messageId, tChannel, embeds));
+                            messageIdString, tChannel, embeds));
         }
         else if (channel instanceof PrivateChannel)
         {
             api.getEventManager().handle(
                     new PrivateMessageEmbedEvent(
                             api, responseNumber,
-                            messageId, (PrivateChannel) channel, embeds));
+                            messageIdString, (PrivateChannel) channel, embeds));
         }
         else
         {
             api.getEventManager().handle(
                     new GroupMessageEmbedEvent(
                             api, responseNumber,
-                            messageId, (Group) channel, embeds));
+                            messageIdString, (Group) channel, embeds));
         }
         //Combo event
         api.getEventManager().handle(
                 new MessageEmbedEvent(
                         api, responseNumber,
-                        messageId, channel, embeds));
+                        messageIdString, channel, embeds));
         return null;
     }
 

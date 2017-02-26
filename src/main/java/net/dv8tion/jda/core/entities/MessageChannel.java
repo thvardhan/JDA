@@ -540,6 +540,12 @@ public interface MessageChannel extends ISnowflake
         };
     }
 
+    default RestAction<Message> getMessageById(long messageId)
+    {
+        Args.notNegative(messageId, "Message ID");
+        return getMessageById(String.valueOf(messageId));
+    }
+
     /**
      * Attempts to delete a {@link net.dv8tion.jda.core.entities.Message Message} from the Discord servers that has
      * the same id as the id provided.
@@ -595,6 +601,12 @@ public interface MessageChannel extends ISnowflake
                 }
             }
         };
+    }
+    //todo docs
+    default RestAction<Void> deleteMessageById(long messageId)
+    {
+        Args.notNegative(messageId, "Message ID");
+        return deleteMessageById(String.valueOf(messageId));
     }
 
     /**
@@ -759,10 +771,17 @@ public interface MessageChannel extends ISnowflake
                 for (int i = 0; i < historyJson.length(); i++)
                     msgs.add(builder.createMessage(historyJson.getJSONObject(i), MessageChannel.this, false));
 
-                msgs.forEach(msg -> mHistory.history.put(msg.getId(), msg));
+                msgs.forEach(msg -> mHistory.history.put(msg.getIdLong(), msg));
                 request.onSuccess(mHistory);
             }
         };
+    }
+
+    //todo docs
+    default RestAction<MessageHistory> getHistoryAround(long messageId, int limit)
+    {
+        Args.notNegative(messageId, "Message ID");
+        return getHistoryAround(String.valueOf(messageId), limit);
     }
 
     /**
@@ -894,6 +913,12 @@ public interface MessageChannel extends ISnowflake
             }
         };
     }
+    //todo docs
+    default RestAction<Void> addReactionById(long messageId, String unicode)
+    {
+        Args.notNegative(messageId, "Message ID");
+        return addReactionById(String.valueOf(messageId), unicode);
+    }
 
     /**
      * Attempts to react to a message represented by the specified {@code messageId}
@@ -962,6 +987,12 @@ public interface MessageChannel extends ISnowflake
             }
         };
     }
+    //todo docs
+    default RestAction<Void> addReactionById(long messageId, Emote emote)
+    {
+        Args.notNegative(messageId, "Message ID");
+        return addReactionById(String.valueOf(messageId), emote);
+    }
 
     /**
      * Used to pin a message. Pinned messages are retrievable via {@link #getPinnedMessages()}.
@@ -1018,6 +1049,12 @@ public interface MessageChannel extends ISnowflake
             }
         };
     }
+    //todo docs
+    default RestAction<Void> pinMessageById(long messageId)
+    {
+        Args.notNegative(messageId, "Message ID");
+        return pinMessageById(String.valueOf(messageId));
+    }
 
     /**
      * Used to unpin a message. Pinned messages are retrievable via {@link #getPinnedMessages()}.
@@ -1073,6 +1110,11 @@ public interface MessageChannel extends ISnowflake
                     request.onFailure(response);
             }
         };
+    }
+    //todo docs
+    default RestAction<Void> unpinMessageById(long messageId)
+    {
+        return unpinMessageById(String.valueOf(messageId));
     }
 
     /**
@@ -1241,6 +1283,12 @@ public interface MessageChannel extends ISnowflake
             }
         };
     }
+    //todo docs
+    default RestAction<Message> editMessageById(long id, Message newContent)
+    {
+        Args.notNegative(id, "Message ID");
+        return editMessageById(String.valueOf(id), newContent);
+    }
 
     /**
      * Attempts to edit a message by its id in this MessageChannel.
@@ -1285,5 +1333,11 @@ public interface MessageChannel extends ISnowflake
     default RestAction<Message> editMessageById(String messageId, MessageEmbed newEmbed)
     {
         return editMessageById(messageId, new MessageBuilder().setEmbed(newEmbed).build());
+    }
+    //todo docs
+    default RestAction<Message> editMessageById(long id, MessageEmbed newEmbed)
+    {
+        Args.notNegative(id, "Message ID");
+        return editMessageById(String.valueOf(id), newEmbed);
     }
 }

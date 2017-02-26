@@ -343,7 +343,7 @@ public class AudioWebSocket extends WebSocketAdapter
             Guild connGuild = api.getGuildById(guild.getId());
             if (connGuild != null)
             {
-                if (connGuild.getVoiceChannelById(audioConnection.getChannel().getId()) == null)
+                if (connGuild.getVoiceChannelById(audioConnection.getChannel().getIdLong()) == null)
                     closeStatus = ConnectionStatus.DISCONNECTED_CHANNEL_DELETED;
             }
         }

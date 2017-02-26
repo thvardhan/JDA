@@ -35,10 +35,10 @@ import java.util.regex.Pattern;
  * <br>A visual breakdown of an Embed and how it relates to this class is available at
  * <a href="http://imgur.com/a/yOb5n" target="_blank">http://imgur.com/a/yOb5n</a>.
  *
- * @since  JDA 3.0
+ * @since  3.0
  * @author John A. Grosh
  */
-public class EmbedBuilder 
+public class EmbedBuilder
 {
     public final static int TITLE_MAX_LENGTH = 256;
     public final static int VALUE_MAX_LENGTH = 1024;
@@ -191,7 +191,7 @@ public class EmbedBuilder
     {
         return description;
     }
-    
+
     /**
      * Sets the Description of the embed. This is where the main chunk of text for an embed is typically placed.
      *
@@ -303,16 +303,7 @@ public class EmbedBuilder
     
     /**
      * Sets the Color of the embed.
-     *
-     * <p><b><a href="http://i.imgur.com/2YnxnRM.png">Example</a></b>
-     *
-     * <p><b>Hint:</b> You can use a predefined color like {@link java.awt.Color#BLUE} or you can define
-     * your own color using one of Color's constructors.
-     * <br>Example: {@link java.awt.Color#Color(int, int, int) new Color(0, 0, 255)}. This is the same as {@link java.awt.Color#BLUE}
-     *
-     * @param  color
-     *         the color of the embed
-     *
+     * @param color the color of the embed
      * @return the builder after the color has been set
      */
     public EmbedBuilder setColor(Color color)
@@ -480,7 +471,7 @@ public class EmbedBuilder
      *
      * <p><b><a href="http://i.imgur.com/gnjzCoo.png">Example of Inline</a></b>
      * <p><b><a href="http://i.imgur.com/Ky0KlsT.png">Example if Non-inline</a></b>
-     * 
+     *
      * @param  name
      *         the name of the Field, displayed in bold above the {@code value}.
      * @param  value

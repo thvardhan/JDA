@@ -17,7 +17,11 @@
 package net.dv8tion.jda.core.entities.impl;
 
 import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.Webhook;
 import net.dv8tion.jda.core.managers.WebhookManager;
 import net.dv8tion.jda.core.managers.WebhookManagerUpdatable;
 import net.dv8tion.jda.core.requests.*;
@@ -36,7 +40,7 @@ public class WebhookImpl implements Webhook
 
     private final Object mngLock = new Object();
     private final TextChannel channel;
-    private final String id;
+    private final long id;
 
     private Member owner;
     private User user;
@@ -46,7 +50,7 @@ public class WebhookImpl implements Webhook
     public WebhookImpl(TextChannel channel, String id)
     {
         this.channel = channel;
-        this.id = id;
+        this.id = Long.parseLong(id);
     }
 
     @Override
@@ -100,7 +104,7 @@ public class WebhookImpl implements Webhook
     @Override
     public RestAction<Void> delete()
     {
-        Route.CompiledRoute route = Route.Webhooks.DELETE_TOKEN_WEBHOOK.compile(id, token);
+        Route.CompiledRoute route = Route.Webhooks.DELETE_TOKEN_WEBHOOK.compile(getId(), token);
         return new RestAction<Void>(getJDA(), route, null)
         {
             @Override
@@ -147,7 +151,7 @@ public class WebhookImpl implements Webhook
     }
 
     @Override
-    public String getId()
+    public long getIdLong()
     {
         return id;
     }
@@ -177,14 +181,14 @@ public class WebhookImpl implements Webhook
     @Override
     public int hashCode()
     {
-        return getId().hashCode();
+        return Long.hashCode(id);
     }
 
     @Override
     public boolean equals(Object obj)
     {
-        return obj instanceof Webhook
-                && ((Webhook) obj).getId().equals(id);
+        return obj instanceof WebhookImpl
+                && ((WebhookImpl) obj).id == this.id;
     }
 
     @Override

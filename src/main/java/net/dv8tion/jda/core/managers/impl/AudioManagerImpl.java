@@ -116,7 +116,7 @@ public class AudioManagerImpl implements AudioManager
 
     public void closeAudioConnection(ConnectionStatus reason)
     {
-        api.getClient().getQueuedAudioConnectionMap().remove(guild.getId());
+        api.getClient().getQueuedAudioConnectionMap().remove(guild.getIdLong());
         this.queuedAudioConnection = null;
         if (audioConnection == null)
             return;

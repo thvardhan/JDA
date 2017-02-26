@@ -32,7 +32,7 @@ public class GuildCreateHandler extends SocketHandler
     }
 
     @Override
-    protected String handleInternally(JSONObject content)
+    protected Long handleInternally(JSONObject content)
     {
         Guild g = api.getGuildById(content.getString("id"));
         Boolean wasAvail = (g == null || g.getName() == null) ? null : g.isAvailable();
@@ -52,7 +52,7 @@ public class GuildCreateHandler extends SocketHandler
                                 new GuildJoinEvent(
                                         api, responseNumber,
                                         guild));
-                        EventCache.get(api).playbackCache(EventCache.Type.GUILD, guild.getId());
+                        EventCache.get(api).playbackCache(EventCache.Type.GUILD, guild.getIdLong());
                     }
                     else if (!wasAvail)                     //was previously unavailable
                     {
