@@ -17,11 +17,7 @@
 package net.dv8tion.jda.core.entities.impl;
 
 import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.entities.Webhook;
+import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.managers.WebhookManager;
 import net.dv8tion.jda.core.managers.WebhookManagerUpdatable;
 import net.dv8tion.jda.core.requests.*;

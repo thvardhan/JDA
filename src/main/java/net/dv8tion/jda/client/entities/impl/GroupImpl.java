@@ -16,8 +16,6 @@
 
 package net.dv8tion.jda.client.entities.impl;
 
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.request.body.MultipartBody;
 import gnu.trove.map.TLongObjectMap;
 import net.dv8tion.jda.client.entities.Call;
 import net.dv8tion.jda.client.entities.Friend;
@@ -32,7 +30,6 @@ import net.dv8tion.jda.core.utils.MiscUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 public class GroupImpl implements Group

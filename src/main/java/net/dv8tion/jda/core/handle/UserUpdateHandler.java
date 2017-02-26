@@ -19,11 +19,7 @@ package net.dv8tion.jda.core.handle;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.entities.impl.JDAImpl;
 import net.dv8tion.jda.core.entities.impl.SelfUserImpl;
-import net.dv8tion.jda.core.events.self.SelfUpdateAvatarEvent;
-import net.dv8tion.jda.core.events.self.SelfUpdateEmailEvent;
-import net.dv8tion.jda.core.events.self.SelfUpdateMFAEvent;
-import net.dv8tion.jda.core.events.self.SelfUpdateNameEvent;
-import net.dv8tion.jda.core.events.self.SelfUpdateVerifiedEvent;
+import net.dv8tion.jda.core.events.self.*;
 import org.json.JSONObject;
 
 import java.util.Objects;
