@@ -581,6 +581,13 @@ public interface JDA
     List<IBucket> shutdownNow(boolean free);
 
     /**
+     * The time between the WebSocket keepAlive message and its ack response by Discord.
+     *
+     * @return Time in milliseconds between discord and the local JDA WebSocketClient
+     */
+    long getPing();
+
+    /**
      * Installs an auxiliary cable into your system.
      *
      * @param  port

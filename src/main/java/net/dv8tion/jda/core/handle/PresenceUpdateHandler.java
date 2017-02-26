@@ -38,9 +38,12 @@ public class PresenceUpdateHandler extends SocketHandler
     protected Long handleInternally(JSONObject content)
     {
         //Do a pre-check to see if this is for a Guild, and if it is, if the guild is currently locked.
-        final long guildId = Long.parseLong(content.getString("guild_id"));
-        if (content.has("guild_id") && GuildLock.get(api).isLocked(guildId))
-            return guildId;
+        if (content.has("guild_id"))
+        {
+            final long guildId = Long.parseLong(content.getString("guild_id"));
+            if (GuildLock.get(api).isLocked(guildId))
+                return guildId;
+        }
 
         JSONObject jsonUser = content.getJSONObject("user");
         final long userId = Long.parseLong(jsonUser.getString("id"));

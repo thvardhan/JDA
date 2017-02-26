@@ -83,6 +83,7 @@ public class JDAImpl implements JDA
     protected boolean bulkDeleteSplittingEnabled;
     protected boolean autoReconnect;
     protected long responseTotal;
+    protected long ping = -1;
 
     public JDAImpl(AccountType accountType, HttpHost proxy, boolean autoReconnect, boolean audioEnabled, boolean useShutdownHook, boolean bulkDeleteSplittingEnabled)
     {
@@ -595,6 +596,12 @@ public class JDAImpl implements JDA
     }
 
     @Override
+    public long getPing()
+    {
+        return ping;
+    }
+
+    @Override
     public JDAClient asClient()
     {
         if (getAccountType() != AccountType.CLIENT)
@@ -742,6 +749,11 @@ public class JDAImpl implements JDA
     public void setResponseTotal(int responseTotal)
     {
         this.responseTotal = responseTotal;
+    }
+
+    public void setPing(long ping)
+    {
+        this.ping = ping;
     }
 
     public String getIdentifierString()

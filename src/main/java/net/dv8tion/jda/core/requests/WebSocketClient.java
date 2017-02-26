@@ -81,6 +81,7 @@ public class WebSocketClient extends WebSocketAdapter implements WebSocketListen
     protected final LinkedList<String> ratelimitQueue = new LinkedList<>();
     protected volatile Thread ratelimitThread = null;
     protected volatile long ratelimitResetTime;
+    protected volatile long heartbeatStart = 0;
     protected volatile int messagesSent;
     protected volatile boolean printedRateLimitMessage = false;
 
@@ -481,6 +482,7 @@ public class WebSocketClient extends WebSocketAdapter implements WebSocketListen
                 break;
             case 11:
                 LOG.trace("Got Heartbeat Ack (OP 11).");
+                api.setPing(System.currentTimeMillis() - heartbeatStart);
                 break;
             default:
                 LOG.debug("Got unknown op-code: " + opCode + " with content: " + message);
@@ -523,7 +525,7 @@ public class WebSocketClient extends WebSocketAdapter implements WebSocketListen
 
         if (!send(keepAlivePacket, true))
             ratelimitQueue.addLast(keepAlivePacket);
-
+        heartbeatStart = System.currentTimeMillis();
     }
 
     protected void sendIdentify()
@@ -665,16 +667,27 @@ public class WebSocketClient extends WebSocketAdapter implements WebSocketListen
 
         //If initiating, only allows READY, RESUMED, GUILD_MEMBERS_CHUNK, GUILD_SYNC, and GUILD_CREATE through.
         // If we are currently chunking, we don't allow GUILD_CREATE through anymore.
-        if (initiating
-                &&  !(type.equals("READY")
+        if (initiating &&  !(type.equals("READY")
                 || type.equals("GUILD_MEMBERS_CHUNK")
                 || type.equals("RESUMED")
                 || type.equals("GUILD_SYNC")
                 || (!chunkingAndSyncing && type.equals("GUILD_CREATE"))))
         {
-            LOG.debug("Caching " + type + " event during init!");
-            cachedEvents.add(raw);
-            return;
+            //If we are currently GuildStreaming, and we get a GUILD_DELETE informing us that a Guild is unavailable
+            // convert it to a GUILD_CREATE for handling.
+            JSONObject content = raw.getJSONObject("d");
+            if (!chunkingAndSyncing && type.equals("GUILD_DELETE") && content.has("unavailable") && content.getBoolean("unavailable"))
+            {
+                type = "GUILD_CREATE";
+                raw.put("t", "GUILD_CREATE")
+                        .put("jda-field","This event was originally a GUILD_DELETE but was converted to GUILD_CREATE for WS init Guild streaming");
+            }
+            else
+            {
+                LOG.debug("Caching " + type + " event during init!");
+                cachedEvents.add(raw);
+                return;
+            }
         }
 //
 //        // Needs special handling due to content of "d" being an array
