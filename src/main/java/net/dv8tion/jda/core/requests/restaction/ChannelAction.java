@@ -326,7 +326,7 @@ public class ChannelAction extends RestAction<Channel>
     }
 
     @Override
-    protected void handleResponse(Response response, Request request)
+    protected void handleResponse(Response response, Request<Channel> request)
     {
         if (!response.isOk())
         {

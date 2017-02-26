@@ -133,7 +133,7 @@ public class MessageHistory
         return new RestAction<List<Message>>(api, route, null)
         {
             @Override
-            protected void handleResponse(Response response, Request request)
+            protected void handleResponse(Response response, Request<List<Message>> request)
             {
                 if (!response.isOk())
                 {
@@ -210,7 +210,7 @@ public class MessageHistory
         return new RestAction<List<Message>>(api, route, null)
         {
             @Override
-            protected void handleResponse(Response response, Request request)
+            protected void handleResponse(Response response, Request<List<Message>> request)
             {
                 if (!response.isOk())
                 {

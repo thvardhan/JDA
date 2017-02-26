@@ -101,7 +101,7 @@ public class UserImpl implements User
     public RestAction<PrivateChannel> openPrivateChannel()
     {
         if (privateChannel != null)
-            return new RestAction.EmptyRestAction<PrivateChannel>(privateChannel);
+            return new RestAction.EmptyRestAction<>(privateChannel);
 
         if (fake)
             throw new IllegalStateException("Cannot open a PrivateChannel with a Fake user.");
@@ -111,7 +111,7 @@ public class UserImpl implements User
         return new RestAction<PrivateChannel>(api, route, body)
         {
             @Override
-            protected void handleResponse(Response response, Request request)
+            protected void handleResponse(Response response, Request<PrivateChannel> request)
             {
                 if (response.isOk())
                 {

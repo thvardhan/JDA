@@ -129,7 +129,7 @@ public class GuildImpl implements Guild
         return new RestAction<List<Webhook>>(api, route, null)
         {
             @Override
-            protected void handleResponse(Response response, Request request)
+            protected void handleResponse(Response response, Request<List<Webhook>> request)
             {
                 if (!response.isOk())
                 {
@@ -467,7 +467,7 @@ public class GuildImpl implements Guild
         return new RestAction<Void>(api, route, null)
         {
             @Override
-            protected void handleResponse(Response response, Request request)
+            protected void handleResponse(Response response, Request<Void> request)
             {
                 if (response.isOk())
                     request.onSuccess(null);
@@ -503,7 +503,7 @@ public class GuildImpl implements Guild
         return new RestAction<Void>(api, route, mfaBody)
         {
             @Override
-            protected void handleResponse(Response response, Request request)
+            protected void handleResponse(Response response, Request<Void> request)
             {
                 if (response.isOk())
                     request.onSuccess(null);
@@ -752,7 +752,7 @@ public class GuildImpl implements Guild
         return new RestAction<List<Invite>>(api, route, null)
         {
             @Override
-            protected void handleResponse(final Response response, final Request request)
+            protected void handleResponse(final Response response, final Request<List<Invite>> request)
             {
                 if (response.isOk())
                 {

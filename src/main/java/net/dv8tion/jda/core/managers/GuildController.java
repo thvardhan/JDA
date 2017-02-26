@@ -163,7 +163,7 @@ public class GuildController
         return new RestAction<Void>(guild.getJDA(), route, body)
         {
             @Override
-            protected void handleResponse(Response response, Request request)
+            protected void handleResponse(Response response, Request<Void> request)
             {
                 if (response.isOk())
                     request.onSuccess(null);
@@ -248,7 +248,7 @@ public class GuildController
         return new RestAction<Void>(guild.getJDA(), route, body)
         {
             @Override
-            protected void handleResponse(Response response, Request request)
+            protected void handleResponse(Response response, Request<Void> request)
             {
                 if (response.isOk())
                     request.onSuccess(null);
@@ -299,7 +299,7 @@ public class GuildController
         return new RestAction<Integer>(guild.getJDA(), route, null)
         {
             @Override
-            protected void handleResponse(Response response, Request request)
+            protected void handleResponse(Response response, Request<Integer> request)
             {
                 if (response.isOk())
                     request.onSuccess(response.getObject().getInt("pruned"));
@@ -348,7 +348,7 @@ public class GuildController
         return new RestAction<Integer>(guild.getJDA(), route, null)
         {
             @Override
-            protected void handleResponse(Response response, Request request)
+            protected void handleResponse(Response response, Request<Integer> request)
             {
                 if (response.isOk())
                     request.onSuccess(response.getObject().getInt("pruned"));
@@ -406,7 +406,7 @@ public class GuildController
         return new RestAction<Void>(guild.getJDA(), route, null)
         {
             @Override
-            protected void handleResponse(Response response, Request request)
+            protected void handleResponse(Response response, Request<Void> request)
             {
                 if (response.isOk())
                     request.onSuccess(null);
@@ -581,7 +581,7 @@ public class GuildController
         return new RestAction<Void>(guild.getJDA(), route, null)
         {
             @Override
-            protected void handleResponse(Response response, Request request)
+            protected void handleResponse(Response response, Request<Void> request)
             {
                 if (response.isOk())
                     request.onSuccess(null);
@@ -653,7 +653,7 @@ public class GuildController
         return new RestAction<Void>(guild.getJDA(), route, null)
         {
             @Override
-            protected void handleResponse(Response response, Request request)
+            protected void handleResponse(Response response, Request<Void> request)
             {
                 if (response.isOk())
                     request.onSuccess(null);
@@ -738,7 +738,7 @@ public class GuildController
         return new RestAction<Void>(guild.getJDA(), route, null)
         {
             @Override
-            protected void handleResponse(Response response, Request request)
+            protected void handleResponse(Response response, Request<Void> request)
             {
                 if (response.isOk())
                     request.onSuccess(null);
@@ -807,7 +807,7 @@ public class GuildController
         return new RestAction<Void>(guild.getJDA(), route, body)
         {
             @Override
-            protected void handleResponse(Response response, Request request)
+            protected void handleResponse(Response response, Request<Void> request)
             {
                 if (response.isOk())
                     request.onSuccess(null);
@@ -874,7 +874,7 @@ public class GuildController
         return new RestAction<Void>(guild.getJDA(), route, body)
         {
             @Override
-            protected void handleResponse(Response response, Request request)
+            protected void handleResponse(Response response, Request<Void> request)
             {
                 if (response.isOk())
                     request.onSuccess(null);
@@ -916,7 +916,7 @@ public class GuildController
         return new RestAction<List<User>>(guild.getJDA(), route, null)
         {
             @Override
-            protected void handleResponse(Response response, Request request)
+            protected void handleResponse(Response response, Request<List<User>> request)
             {
                 if (!response.isOk())
                 {
@@ -1205,7 +1205,7 @@ public class GuildController
         return new RestAction<Void>(guild.getJDA(), route, body)
         {
             @Override
-            protected void handleResponse(Response response, Request request)
+            protected void handleResponse(Response response, Request<Void> request)
             {
                 if (response.isOk())
                     request.onSuccess(null);
@@ -1339,7 +1339,7 @@ public class GuildController
         return new RestAction<Void>(guild.getJDA(), route, body)
         {
             @Override
-            protected void handleResponse(Response response, Request request)
+            protected void handleResponse(Response response, Request<Void> request)
             {
                 if (response.isOk())
                     request.onSuccess(null);
@@ -1401,7 +1401,7 @@ public class GuildController
         return new RestAction<Void>(guild.getJDA(), route, body)
         {
             @Override
-            protected void handleResponse(Response response, Request request)
+            protected void handleResponse(Response response, Request<Void> request)
             {
                 if (response.isOk())
                     request.onSuccess(null);
@@ -1677,7 +1677,7 @@ public class GuildController
         return new RestAction<Emote>(getJDA(), route, body)
         {
             @Override
-            protected void handleResponse(Response response, Request request)
+            protected void handleResponse(Response response, Request<Emote> request)
             {
                 if (response.isOk())
                 {
@@ -1725,7 +1725,7 @@ public class GuildController
      */
     public ChannelOrderAction<TextChannel> modifyTextChannelPositions()
     {
-        return new ChannelOrderAction(guild, ChannelType.TEXT);
+        return new ChannelOrderAction<>(guild, ChannelType.TEXT);
     }
 
     /**
@@ -1748,7 +1748,7 @@ public class GuildController
      */
     public ChannelOrderAction<VoiceChannel> modifyVoiceChannelPositions()
     {
-        return new ChannelOrderAction(guild, ChannelType.VOICE);
+        return new ChannelOrderAction<>(guild, ChannelType.VOICE);
     }
 
     /**

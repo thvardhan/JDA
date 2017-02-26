@@ -408,7 +408,7 @@ public class PermissionOverrideAction extends RestAction<PermissionOverride>
     }
 
     @Override
-    protected void handleResponse(Response response, Request request)
+    protected void handleResponse(Response response, Request<PermissionOverride> request)
     {
         if (!response.isOk())
         {

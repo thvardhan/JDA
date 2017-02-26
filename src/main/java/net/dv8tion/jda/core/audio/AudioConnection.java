@@ -432,7 +432,7 @@ public class AudioConnection
                         else
                         {
                             //No audio to mix, provide 20 MS of silence. (960 PCM samples for each channel)
-                            receiveHandler.handleCombinedAudio(new CombinedAudio(new LinkedList(), new short[1920]));
+                            receiveHandler.handleCombinedAudio(new CombinedAudio(new LinkedList<>(), new short[1920]));
                         }
                     }
                 }

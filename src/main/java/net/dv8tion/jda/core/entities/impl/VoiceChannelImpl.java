@@ -191,7 +191,7 @@ public class VoiceChannelImpl implements VoiceChannel
         return new RestAction<Void>(getJDA(), route, null)
         {
             @Override
-            protected void handleResponse(Response response, Request request)
+            protected void handleResponse(Response response, Request<Void> request)
             {
                 if (response.isOk())
                     request.onSuccess(null);
@@ -343,7 +343,7 @@ public class VoiceChannelImpl implements VoiceChannel
         return new RestAction<List<Invite>>(getJDA(), route, null)
         {
             @Override
-            protected void handleResponse(final Response response, final Request request)
+            protected void handleResponse(final Response response, final Request<List<Invite>> request)
             {
                 if (response.isOk())
                 {

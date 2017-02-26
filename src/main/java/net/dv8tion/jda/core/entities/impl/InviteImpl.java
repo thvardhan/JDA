@@ -76,7 +76,7 @@ public class InviteImpl implements Invite
         return new RestAction<Invite>(api, route, null)
         {
             @Override
-            protected void handleResponse(final Response response, final Request request)
+            protected void handleResponse(final Response response, final Request<Invite> request)
             {
                 if (response.isOk())
                 {
@@ -105,7 +105,7 @@ public class InviteImpl implements Invite
         return new RestAction<Invite>(this.api, route, null)
         {
             @Override
-            protected void handleResponse(final Response response, final Request request)
+            protected void handleResponse(final Response response, final Request<Invite> request)
             {
                 if (response.isOk())
                 {
@@ -155,7 +155,7 @@ public class InviteImpl implements Invite
         return new RestAction<Invite>(this.api, route, null)
         {
             @Override
-            protected void handleResponse(final Response response, final Request request)
+            protected void handleResponse(final Response response, final Request<Invite> request)
             {
                 if (response.isOk())
                 {

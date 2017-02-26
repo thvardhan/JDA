@@ -246,7 +246,7 @@ public class RoleAction extends RestAction<Role>
     }
 
     @Override
-    protected void handleResponse(Response response, Request request)
+    protected void handleResponse(Response response, Request<Role> request)
     {
         if (response.isOk())
             request.onSuccess(EntityBuilder.get(api).createRole(response.getObject(), guild.getIdLong()));

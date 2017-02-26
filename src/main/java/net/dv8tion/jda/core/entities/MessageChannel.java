@@ -220,7 +220,7 @@ public interface MessageChannel extends ISnowflake
         return new RestAction<Message>(getJDA(), route, json)
         {
             @Override
-            protected void handleResponse(Response response, Request request)
+            protected void handleResponse(Response response, Request<Message> request)
             {
                 if (response.isOk())
                 {
@@ -406,7 +406,7 @@ public interface MessageChannel extends ISnowflake
         return new RestAction<Message>(getJDA(), route, body)
         {
             @Override
-            protected void handleResponse(Response response, Request request)
+            protected void handleResponse(Response response, Request<Message> request)
             {
                 if (response.isOk())
                     request.onSuccess(EntityBuilder.get(api).createMessage(response.getObject(), MessageChannel.this, false));
@@ -467,7 +467,7 @@ public interface MessageChannel extends ISnowflake
         return new RestAction<Message>(getJDA(), route, body)
         {
             @Override
-            protected void handleResponse(Response response, Request request)
+            protected void handleResponse(Response response, Request<Message> request)
             {
                 if (response.isOk())
                     request.onSuccess(EntityBuilder.get(api).createMessage(response.getObject(), MessageChannel.this, false));
@@ -526,7 +526,7 @@ public interface MessageChannel extends ISnowflake
         return new RestAction<Message>(getJDA(), route, null)
         {
             @Override
-            protected void handleResponse(Response response, Request request)
+            protected void handleResponse(Response response, Request<Message> request)
             {
                 if (response.isOk())
                 {
@@ -591,7 +591,7 @@ public interface MessageChannel extends ISnowflake
         Route.CompiledRoute route = Route.Messages.DELETE_MESSAGE.compile(getId(), messageId);
         return new RestAction<Void>(getJDA(), route, null) {
             @Override
-            protected void handleResponse(Response response, Request request)
+            protected void handleResponse(Response response, Request<Void> request)
             {
                 if (response.isOk())
                     request.onSuccess(null);
@@ -754,7 +754,7 @@ public interface MessageChannel extends ISnowflake
         return new RestAction<MessageHistory>(getJDA(), route, null)
         {
             @Override
-            protected void handleResponse(Response response, Request request)
+            protected void handleResponse(Response response, Request<MessageHistory> request)
             {
                 if (!response.isOk())
                 {
@@ -819,7 +819,7 @@ public interface MessageChannel extends ISnowflake
         return new RestAction<Void>(getJDA(), route, null)
         {
             @Override
-            protected void handleResponse(Response response, Request request)
+            protected void handleResponse(Response response, Request<Void> request)
             {
                 if (response.isOk())
                     request.onSuccess(null);
@@ -904,7 +904,7 @@ public interface MessageChannel extends ISnowflake
         return new RestAction<Void>(getJDA(), route, null)
         {
             @Override
-            protected void handleResponse(Response response, Request request)
+            protected void handleResponse(Response response, Request<Void> request)
             {
                 if (response.isOk())
                     request.onSuccess(null);
@@ -978,7 +978,7 @@ public interface MessageChannel extends ISnowflake
         return new RestAction<Void>(getJDA(), route, null)
         {
             @Override
-            protected void handleResponse(Response response, Request request)
+            protected void handleResponse(Response response, Request<Void> request)
             {
                 if (response.isOk())
                     request.onSuccess(null);
@@ -1040,7 +1040,7 @@ public interface MessageChannel extends ISnowflake
         return new RestAction<Void>(getJDA(), route, null)
         {
             @Override
-            protected void handleResponse(Response response, Request request)
+            protected void handleResponse(Response response, Request<Void> request)
             {
                 if (response.isOk())
                     request.onSuccess(null);
@@ -1102,7 +1102,7 @@ public interface MessageChannel extends ISnowflake
         return new RestAction<Void>(getJDA(), route, null)
         {
             @Override
-            protected void handleResponse(Response response, Request request)
+            protected void handleResponse(Response response, Request<Void> request)
             {
                 if (response.isOk())
                     request.onSuccess(null);
@@ -1146,7 +1146,7 @@ public interface MessageChannel extends ISnowflake
         return new RestAction<List<Message>>(getJDA(), route, null)
         {
             @Override
-            protected void handleResponse(Response response, Request request)
+            protected void handleResponse(Response response, Request<List<Message>> request)
             {
                 if (response.isOk())
                 {
@@ -1269,7 +1269,7 @@ public interface MessageChannel extends ISnowflake
         return new RestAction<Message>(getJDA(), route, json)
         {
             @Override
-            protected void handleResponse(Response response, Request request)
+            protected void handleResponse(Response response, Request<Message> request)
             {
                 if (response.isOk())
                 {

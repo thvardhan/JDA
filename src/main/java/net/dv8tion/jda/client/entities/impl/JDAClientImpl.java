@@ -245,7 +245,7 @@ public class JDAClientImpl implements JDAClient
         return new RestAction<Invite>(api, route, null)
         {
             @Override
-            protected void handleResponse(final Response response, final Request request)
+            protected void handleResponse(final Response response, final Request<Invite> request)
             {
                 if (response.isOk())
                 {

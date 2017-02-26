@@ -152,7 +152,7 @@ public class JDAImpl implements JDA
         RestAction<JSONObject> login = new RestAction<JSONObject>(this, Route.Self.GET_SELF.compile(), null)
         {
             @Override
-            protected void handleResponse(Response response, Request request)
+            protected void handleResponse(Response response, Request<JSONObject> request)
             {
                 if (response.isOk())
                     request.onSuccess(response.getObject());
@@ -354,7 +354,7 @@ public class JDAImpl implements JDA
         return new RestAction<User>(this, route, null)
         {
             @Override
-            protected void handleResponse(Response response, Request request)
+            protected void handleResponse(Response response, Request<User> request)
             {
                 if (!response.isOk())
                 {
