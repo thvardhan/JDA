@@ -34,12 +34,17 @@ import net.dv8tion.jda.core.requests.ratelimit.IBucket;
 import net.dv8tion.jda.core.utils.SimpleLog;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Requester
 {
     public static final SimpleLog LOG = SimpleLog.getLog("JDARequester");
-    public static String USER_AGENT = "JDA DiscordBot (" + JDAInfo.GITHUB + ", " + JDAInfo.VERSION + ")";
     public static final String DISCORD_API_PREFIX = "https://discordapp.com/api/";
+    public static String USER_AGENT = "JDA DiscordBot (" + JDAInfo.GITHUB + ", " + JDAInfo.VERSION + ")";
+    static final ExecutorService THREAD_POOL = Executors.newCachedThreadPool(new ResponseHandlerThreadFactory());
 
     private final JDAImpl api;
     private final RateLimiter rateLimiter;
@@ -216,5 +221,24 @@ public class Requester
         request.header("user-agent", USER_AGENT);
         request.header("Accept-Encoding", "gzip");
         return baseRequest;
+    }
+
+    public static void destroy()
+    {
+        THREAD_POOL.shutdown();
+    }
+
+    private static final class ResponseHandlerThreadFactory implements ThreadFactory
+    {
+
+        private final AtomicInteger count = new AtomicInteger(1);
+
+        @Override
+        public Thread newThread(Runnable r)
+        {
+            Thread t = new Thread(r, "ResponseHandlerThread #" + count.getAndIncrement());
+            t.setDaemon(true);
+            return t;
+        }
     }
 }

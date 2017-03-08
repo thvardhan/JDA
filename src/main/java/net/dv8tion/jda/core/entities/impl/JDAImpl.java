@@ -490,6 +490,7 @@ public class JDAImpl implements JDA
 
         if (free)
         {
+            Requester.destroy();
             try
             {
                 Unirest.shutdown();
