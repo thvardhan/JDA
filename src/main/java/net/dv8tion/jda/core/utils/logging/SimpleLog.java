@@ -22,20 +22,23 @@ import org.slf4j.Marker;
 import java.io.PrintStream;
 import java.time.OffsetDateTime;
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class SimpleLog implements Logger
 {
-
     public static final byte TRACE = 0x1;
     public static final byte DEBUG = 0x2;
     public static final byte INFO  = 0x4;
     public static final byte WARN  = 0x8;
     public static final byte ERROR = 0x10;
+    public static final int  ALL = TRACE | DEBUG | INFO | WARN | ERROR;
+
+    private static int defaultLevel = INFO | WARN | ERROR;
 
     private final String name;
-    private short staticLevel = 0b11100;
-    private Map<Marker, Short> mappedLevels = new HashMap<>();
+    private int staticLevel = defaultLevel;
+    private Map<Marker, Integer> mappedLevels = new HashMap<>();
 
 
     public SimpleLog(String name)
@@ -55,41 +58,88 @@ public class SimpleLog implements Logger
                 (second < 10 ? "0" : "") + second);
     }
 
+    public static void setDefaultLevel(int level)
+    {
+        defaultLevel = level;
+    }
+
+    public static int getDefaultLevel()
+    {
+        return defaultLevel;
+    }
+
+    public void setStaticLevel(int newLevel)
+    {
+        this.staticLevel = newLevel;
+    }
+
+    public void enableLevel(int level)
+    {
+        this.staticLevel = (short) (staticLevel & ~level);
+    }
+
+    public void disableLevel(int level)
+    {
+        this.staticLevel |= level;
+    }
+
+    public int setMarkerLevel(Marker marker, int level)
+    {
+        return mappedLevels.put(marker, level);
+    }
+
+    public int enableMarkerLevel(Marker marker, int level)
+    {
+        return mappedLevels.compute(marker, (key, value) -> (value != null ? value : 0) | level);
+    }
+
+    public int disableMarkerLevel(Marker marker, int level)
+    {
+        return mappedLevels.compute(marker, (key, value) -> (value != null ? value : 0) & ~level);
+    }
+
     private void log(byte level, Marker marker, String format, Object... arguments)
     {
-        if ((mappedLevels.getOrDefault(marker, staticLevel) & level) < 1)
-            return;
-        String time = timestamp() + " ";
-        String levelS = "";
-        if (level == TRACE)
-            levelS = "[TRACE] ";
-        else if (level == DEBUG)
-            levelS = "[DEBUG] ";
-        else if (level == INFO)
-            levelS = "[INFO] ";
-        else if (level == WARN)
-            levelS = "[WARN] ";
-        else if (level == ERROR)
-            levelS = "[ERROR] ";
-
-        List<String> markers = new LinkedList<>();
-        if (marker != null)
+        try
         {
-            for (Iterator<Marker> it = marker.iterator(); it.hasNext(); )
+            if ((mappedLevels.getOrDefault(marker, staticLevel) & level) < 1)
+                return;
+            String time = timestamp() + " ";
+            String levelS = "";
+            if (level == TRACE)
+                levelS = "[TRACE] ";
+            else if (level == DEBUG)
+                levelS = "[DEBUG] ";
+            else if (level == INFO)
+                levelS = "[INFO] ";
+            else if (level == WARN)
+                levelS = "[WARN] ";
+            else if (level == ERROR)
+                levelS = "[ERROR] ";
+
+            List<String> markers = new LinkedList<>();
+            if (marker != null)
             {
-                Marker current = it.next();
-                if (current == null) break;
-                String name = current.getName();
-                if (name != null && !name.isEmpty())
-                    markers.add(String.format("[%s]", name));
+                for (Iterator<Marker> it = marker.iterator(); it.hasNext(); )
+                {
+                    Marker current = it.next();
+                    if (current == null) break;
+                    String name = current.getName();
+                    if (name != null && !name.isEmpty())
+                        markers.add(String.format("[%s]", name));
+                }
             }
+
+            String tags = markers.isEmpty() ? null : markers.stream().collect(Collectors.joining(" ", "", " "));
+
+            PrintStream out = level == ERROR ? System.err : System.out;
+            out.printf("%s%s%s[%s] %s%n", time, levelS, tags != null ? tags : "", name,
+                    format(format, arguments));
         }
-
-        String tags = markers.isEmpty() ? null : markers.stream().collect(Collectors.joining(" ", "", " "));
-
-        PrintStream out = level == ERROR ? System.err : System.out;
-        out.printf("%s%s%s[%s] %s%n", time, levelS, tags != null ? tags : "", name,
-                format(format, arguments));
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -490,13 +540,23 @@ public class SimpleLog implements Logger
 
     private static final String BRACKETS = "\\{[^}]*}";
 
-    private static String format(String format, Object... arg)
+    private static String format(String format, Object... args)
     {
-        if (arg != null)
+        if (args != null)
         {
-            for (int i = 0; i < arg.length; i++)
-                format = format.replaceFirst(BRACKETS, arg[i] == null ? "null" : arg[i].toString());
+            for (Object a : args)
+            {
+                if (a instanceof Supplier)
+                    format = format.replaceFirst(BRACKETS, sanitized(((Supplier) a).get()));
+                else
+                    format = format.replaceFirst(BRACKETS, sanitized(a));
+            }
         }
         return format;
+    }
+
+    private static String sanitized(Object input)
+    {
+        return String.valueOf(input).replace("$", "\\$");
     }
 }

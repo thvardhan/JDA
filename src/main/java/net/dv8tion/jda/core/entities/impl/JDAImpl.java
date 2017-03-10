@@ -118,14 +118,7 @@ public class JDAImpl implements JDA
         this.shardMarker = new ShardMarker(shardInfo);
         if (name != null)
         {
-            getShardMarker().add(new SingletonMarker()
-            {
-                @Override
-                public String getName()
-                {
-                    return name;
-                }
-            });
+            getShardMarker().add(new SingletonMarker(name));
         }
         LOG.info(getShardMarker(), "Login Successful!");
 

@@ -20,8 +20,20 @@ import org.slf4j.Marker;
 
 import java.util.Iterator;
 
-public abstract class SingletonMarker implements Marker
+public class SingletonMarker implements Marker
 {
+    protected final String name;
+
+    public SingletonMarker(String name)
+    {
+        this.name = name;
+    }
+
+    @Override
+    public String getName()
+    {
+        return name;
+    }
 
     @Override
     public void add(Marker reference)
