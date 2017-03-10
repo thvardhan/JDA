@@ -47,10 +47,10 @@ public class ChannelDeleteHandler extends SocketHandler
         ChannelType type = ChannelType.fromId(content.getInt("type"));
 
         long guildId = 0;
-        final long channelId = Long.parseLong(content.getString("id"));
+        final long channelId = content.getLong("id");
         if (type.isGuild())
         {
-            guildId = Long.parseLong(content.getString("guild_id"));
+            guildId = content.getLong("guild_id");
             if (GuildLock.get(api).isLocked(guildId))
                 return guildId;
         }
@@ -127,7 +127,7 @@ public class ChannelDeleteHandler extends SocketHandler
             case GROUP:
             {
                 //TODO: close call on group leave (kill audio manager)
-                final long groupId = Long.parseLong(content.getString("id"));
+                final long groupId = content.getLong("id");
                 GroupImpl group = (GroupImpl) ((JDAClientImpl) api.asClient()).getGroupMap().remove(groupId);
                 if (group == null)
                 {

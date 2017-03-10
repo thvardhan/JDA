@@ -34,7 +34,7 @@ public class GuildCreateHandler extends SocketHandler
     @Override
     protected Long handleInternally(JSONObject content)
     {
-        Guild g = api.getGuildById(content.getString("id"));
+        Guild g = api.getGuildById(content.getLong("id"));
         Boolean wasAvail = (g == null || g.getName() == null) ? null : g.isAvailable();
         EntityBuilder.get(api).createGuildFirstPass(content, guild ->
         {

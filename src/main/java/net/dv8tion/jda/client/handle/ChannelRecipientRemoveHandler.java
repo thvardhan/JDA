@@ -35,8 +35,8 @@ public class ChannelRecipientRemoveHandler extends SocketHandler
     @Override
     protected Long handleInternally(JSONObject content)
     {
-        final long groupId = Long.parseLong(content.getString("channel_id"));
-        final long userId = Long.parseLong(content.getJSONObject("user").getString("id"));
+        final long groupId = content.getLong("channel_id");
+        final long userId = content.getJSONObject("user").getLong("id");
 
         GroupImpl group = (GroupImpl) api.asClient().getGroupById(groupId);
         if (group == null)

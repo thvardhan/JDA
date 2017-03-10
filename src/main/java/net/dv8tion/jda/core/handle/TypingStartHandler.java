@@ -42,7 +42,7 @@ public class TypingStartHandler extends SocketHandler
     @Override
     protected Long handleInternally(JSONObject content)
     {
-        final long channelId = Long.parseLong(content.getString("channel_id"));
+        final long channelId = content.getLong("channel_id");
         MessageChannel channel = api.getTextChannelMap().get(channelId);
         if (channel == null)
             channel = api.getPrivateChannelMap().get(channelId);
@@ -62,7 +62,7 @@ public class TypingStartHandler extends SocketHandler
                 return guildId;
         }
 
-        final long userId = Long.parseLong(content.getString("user_id"));
+        final long userId = content.getLong("user_id");
         User user;
         if (channel instanceof PrivateChannel)
             user = ((PrivateChannel) channel).getUser();

@@ -1682,7 +1682,7 @@ public class GuildController
                 if (response.isOk())
                 {
                     JSONObject obj = response.getObject();
-                    final long id = Long.parseLong(obj.getString("id"));
+                    final long id = obj.getLong("id");
                     String name = obj.getString("name");
                     EmoteImpl emote = new EmoteImpl(id, guild).setName(name);
                     // managed is false by default, should always be false for emotes created by client accounts.

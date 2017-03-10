@@ -38,7 +38,7 @@ public class CallDeleteHandler extends SocketHandler
     @Override
     protected Long handleInternally(JSONObject content)
     {
-        final long channelId = Long.parseLong(content.getString("channel_id"));
+        final long channelId = content.getLong("channel_id");
         CallableChannel channel = api.asClient().getGroupById(channelId);
         if (channel == null)
             channel = api.getPrivateChannelMap().get(channelId);

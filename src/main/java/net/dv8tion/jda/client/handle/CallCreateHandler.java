@@ -40,8 +40,8 @@ public class CallCreateHandler extends SocketHandler
     @Override
     protected Long handleInternally(JSONObject content)
     {
-        final long channelId = Long.parseLong(content.getString("channel_id"));
-        final long messageId = Long.parseLong(content.getString("message_id"));
+        final long channelId = content.getLong("channel_id");
+        final long messageId = content.getLong("message_id");
         Region region = Region.fromKey(content.getString("region"));
         JSONArray voiceStates = content.getJSONArray("voice_states");
         JSONArray ringing = content.getJSONArray("ringing");
@@ -97,7 +97,7 @@ public class CallCreateHandler extends SocketHandler
         for (int i = 0; i < voiceStates.length(); i++)
         {
             JSONObject voiceState = voiceStates.getJSONObject(i);
-            final long userId = Long.parseLong(voiceState.getString("user_id"));
+            final long userId = voiceState.getLong("user_id");
             CallUser cUser = callUsers.get(userId);
             CallVoiceStateImpl vState = (CallVoiceStateImpl) cUser.getVoiceState();
 

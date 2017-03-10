@@ -36,7 +36,7 @@ public class GuildMemberRemoveHandler extends SocketHandler
     @Override
     protected Long handleInternally(JSONObject content)
     {
-        final long id = Long.parseLong(content.getString("guild_id"));
+        final long id = content.getLong("guild_id");
         if (GuildLock.get(api).isLocked(id))
             return id;
 
@@ -47,7 +47,7 @@ public class GuildMemberRemoveHandler extends SocketHandler
             return null;
         }
 
-        final long userId = Long.parseLong(content.getJSONObject("user").getString("id"));
+        final long userId = content.getJSONObject("user").getLong("id");
         MemberImpl member = (MemberImpl) guild.getMembersMap().remove(userId);
 
         if (member == null)

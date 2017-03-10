@@ -41,7 +41,7 @@ public class GuildEmojisUpdateHandler extends SocketHandler
     @Override
     protected Long handleInternally(JSONObject content)
     {
-        final long guildId = Long.parseLong(content.getString("guild_id"));
+        final long guildId = content.getLong("guild_id");
         if (GuildLock.get(api).isLocked(guildId))
             return guildId;
 
@@ -58,7 +58,7 @@ public class GuildEmojisUpdateHandler extends SocketHandler
         for (int i = 0; i < array.length(); i++)
         {
             JSONObject current = array.getJSONObject(i);
-            final long emoteId = Long.parseLong(current.getString("id"));
+            final long emoteId = current.getLong("id");
             EmoteImpl emote = (EmoteImpl) emoteMap.get(emoteId);
             if (emote == null)
                 emote = new EmoteImpl(emoteId, guild);

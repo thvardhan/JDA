@@ -661,9 +661,9 @@ public class WebSocketClient extends WebSocketAdapter implements WebSocketListen
         long responseTotal = api.getResponseTotal();
 
         if (type.equals("GUILD_MEMBER_ADD"))
-            ((GuildMembersChunkHandler) getHandler("GUILD_MEMBERS_CHUNK")).modifyExpectedGuildMember(Long.parseLong(raw.getJSONObject("d").getString("guild_id")), 1);
+            ((GuildMembersChunkHandler) getHandler("GUILD_MEMBERS_CHUNK")).modifyExpectedGuildMember(raw.getJSONObject("d").getLong("guild_id"), 1);
         if (type.equals("GUILD_MEMBER_REMOVE"))
-            ((GuildMembersChunkHandler) getHandler("GUILD_MEMBERS_CHUNK")).modifyExpectedGuildMember(Long.parseLong(raw.getJSONObject("d").getString("guild_id")), -1);
+            ((GuildMembersChunkHandler) getHandler("GUILD_MEMBERS_CHUNK")).modifyExpectedGuildMember(raw.getJSONObject("d").getLong("guild_id"), -1);
 
         //If initiating, only allows READY, RESUMED, GUILD_MEMBERS_CHUNK, GUILD_SYNC, and GUILD_CREATE through.
         // If we are currently chunking, we don't allow GUILD_CREATE through anymore.

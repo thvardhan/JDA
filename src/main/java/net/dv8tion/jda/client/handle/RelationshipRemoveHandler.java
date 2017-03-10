@@ -44,7 +44,7 @@ public class RelationshipRemoveHandler extends SocketHandler
     @Override
     protected Long handleInternally(JSONObject content)
     {
-        final long userId = Long.parseLong(content.getString("id"));
+        final long userId = content.getLong("id");
         RelationshipType type = RelationshipType.fromKey(content.getInt("type"));
 
         //Technically this could be used to detect when another user has unblocked us,

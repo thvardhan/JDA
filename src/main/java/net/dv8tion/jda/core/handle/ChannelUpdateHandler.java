@@ -58,7 +58,7 @@ public class ChannelUpdateHandler extends SocketHandler
         List<Role> containedRoles = new ArrayList<>();
         List<Member> containedMembers = new ArrayList<>();
 
-        final long channelId = Long.parseLong(content.getString("id"));
+        final long channelId = content.getLong("id");
         String name = content.getString("name");
         int position = content.getInt("position");
         JSONArray permOverwrites = content.getJSONArray("permission_overwrites");
@@ -230,7 +230,7 @@ public class ChannelUpdateHandler extends SocketHandler
     private void handlePermissionOverride(JSONObject override, Channel channel, JSONObject content,
                                           List<Role> changedRoles, List<Role> containedRoles,List<Member> changedMembers, List<Member> containedMembers)
     {
-        final long id = Long.parseLong(override.getString("id"));
+        final long id = content.getLong("id");
         int allow = override.getInt("allow");
         int deny = override.getInt("deny");
 
@@ -271,7 +271,7 @@ public class ChannelUpdateHandler extends SocketHandler
             }
             case "member":
             {
-                Member member = channel.getGuild().getMemberById(override.getString("id"));
+                Member member = channel.getGuild().getMemberById(override.getLong("id"));
                 if (member == null)
                 {
                     EventCache.get(api).cache(EventCache.Type.USER, id, () ->
@@ -309,12 +309,12 @@ public class ChannelUpdateHandler extends SocketHandler
 
     private void handleGroup(JSONObject content)
     {
-        final long groupId = Long.parseLong(content.getString("id"));
-        final long ownerId = Long.parseLong(content.getString("owner_id"));
+        final long groupId = content.getLong("id");
+        final long ownerId = content.getLong("owner_id");
         String name = !content.isNull("name") ? content.getString("name") : null;
         String iconId = !content.isNull("icon") ? content.getString("icon") : null;
 
-        GroupImpl group = (GroupImpl) api.asClient().getGroupById(content.getString("id"));
+        GroupImpl group = (GroupImpl) api.asClient().getGroupById(groupId);
         if (group == null)
         {
             EventCache.get(api).cache(EventCache.Type.CHANNEL, groupId, () -> handle(responseNumber, allContent));

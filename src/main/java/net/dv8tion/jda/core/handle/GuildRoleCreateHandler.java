@@ -34,7 +34,7 @@ public class GuildRoleCreateHandler extends SocketHandler
     @Override
     protected Long handleInternally(JSONObject content)
     {
-        final long guildId = Long.parseLong(content.getString("guild_id"));
+        final long guildId = content.getLong("guild_id");
         if (GuildLock.get(api).isLocked(guildId))
         {
             return guildId;

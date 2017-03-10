@@ -22,7 +22,6 @@ import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.hooks.IEventManager;
 import net.dv8tion.jda.core.managers.Presence;
 import net.dv8tion.jda.core.requests.RestAction;
-import net.dv8tion.jda.core.requests.ratelimit.IBucket;
 import org.apache.http.HttpHost;
 
 import java.util.Collection;
@@ -577,8 +576,6 @@ public interface JDA
      * @param  free If true, shuts down JDA's rest system permanently for all current and future instances.
      */
     void shutdown(boolean free);
-
-    List<IBucket> shutdownNow(boolean free);
 
     /**
      * The time between the WebSocket keepAlive message and its ack response by Discord.

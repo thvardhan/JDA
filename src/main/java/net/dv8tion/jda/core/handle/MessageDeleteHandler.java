@@ -41,7 +41,7 @@ public class MessageDeleteHandler extends SocketHandler
     {
         final String messageIdString = content.getString("id");
         final long messageId = Long.parseLong(messageIdString);
-        final long channelId = Long.parseLong(content.getString("channel_id"));
+        final long channelId = content.getLong("channel_id");
 
         MessageChannel channel = api.getTextChannelById(channelId);
         if (channel == null)

@@ -19,7 +19,6 @@ package net.dv8tion.jda.core.requests;
 import com.mashape.unirest.http.HttpResponse;
 import net.dv8tion.jda.core.entities.impl.JDAImpl;
 import net.dv8tion.jda.core.requests.Route.CompiledRoute;
-import net.dv8tion.jda.core.requests.Route.RateLimit;
 import net.dv8tion.jda.core.requests.ratelimit.IBucket;
 
 import java.util.ArrayList;
@@ -27,7 +26,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 public abstract class RateLimiter
 {
@@ -80,30 +78,7 @@ public abstract class RateLimiter
     {
         isShutdown = true;
 
-        try
-        {
-            while (!submittedBuckets.isEmpty())
-            {
-                Thread.sleep(100);
-            }
-        }
-        catch (InterruptedException ignored) {}
-
         pool.shutdownNow();
-    }
-
-    protected List<IBucket> shutdownNow()
-    {
-        isShutdown = true;
-        pool.shutdownNow(); //We don't get the runnable list returned here because some buckets might've failed to actually finish properly and aren't in this list.
-
-        try
-        {
-            while (!pool.awaitTermination(100, TimeUnit.MILLISECONDS));
-        }
-        catch (InterruptedException ignored) {}
-
-        return buckets.values().stream().filter(b -> !b.getRequests().isEmpty()).collect(Collectors.toList());
     }
 
     private class RateLimitThreadFactory implements ThreadFactory

@@ -25,7 +25,7 @@ import net.dv8tion.jda.core.requests.*;
 /**
  * The implementation for {@link net.dv8tion.jda.core.entities.Webhook Webhook}
  *
- * @since  JDA 3.0
+ * @since  3.0
  * @author Florian Spieß
  */
 public class WebhookImpl implements Webhook
@@ -43,10 +43,10 @@ public class WebhookImpl implements Webhook
     private String token;
 
 
-    public WebhookImpl(TextChannel channel, String id)
+    public WebhookImpl(TextChannel channel, long id)
     {
         this.channel = channel;
-        this.id = Long.parseLong(id);
+        this.id = id;
     }
 
     @Override

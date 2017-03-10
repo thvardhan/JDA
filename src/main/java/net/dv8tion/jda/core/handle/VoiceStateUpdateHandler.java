@@ -49,7 +49,7 @@ public class VoiceStateUpdateHandler extends SocketHandler
     @Override
     protected Long handleInternally(JSONObject content)
     {
-        final Long guildId = content.has("guild_id") ? Long.parseLong(content.getString("guild_id")) : null;
+        final Long guildId = content.has("guild_id") ? content.getLong("guild_id") : null;
         if (guildId != null && GuildLock.get(api).isLocked(guildId))
             return guildId;
 
@@ -62,9 +62,9 @@ public class VoiceStateUpdateHandler extends SocketHandler
 
     private void handleGuildVoiceState(JSONObject content)
     {
-        final long userId = Long.parseLong(content.getString("user_id"));
-        final long guildId = Long.parseLong(content.getString("guild_id"));
-        final Long channelId = !content.isNull("channel_id") ? Long.parseLong(content.getString("channel_id")) : null;
+        final long userId = content.getLong("user_id");
+        final long guildId = content.getLong("guild_id");
+        final Long channelId = !content.isNull("channel_id") ? content.getLong("channel_id") : null;
         final String sessionId = !content.isNull("session_id") ? content.getString("session_id") : null;
         boolean selfMuted = content.getBoolean("self_mute");
         boolean selfDeafened = content.getBoolean("self_deaf");
@@ -186,8 +186,8 @@ public class VoiceStateUpdateHandler extends SocketHandler
 
     private void handleCallVoiceState(JSONObject content)
     {
-        final long userId = Long.parseLong(content.getString("user_id"));
-        final Long channelId = !content.isNull("channel_id") ? Long.parseLong(content.getString("channel_id")) : null;
+        final long userId = content.getLong("user_id");
+        final Long channelId = !content.isNull("channel_id") ? content.getLong("channel_id") : null;
         String sessionId = !content.isNull("session_id") ? content.getString("session_id") : null;
         boolean selfMuted = content.getBoolean("self_mute");
         boolean selfDeafened = content.getBoolean("self_deaf");

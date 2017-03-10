@@ -30,10 +30,7 @@ import net.dv8tion.jda.core.entities.impl.JDAImpl;
 import net.dv8tion.jda.core.requests.Route.CompiledRoute;
 import net.dv8tion.jda.core.requests.ratelimit.BotRateLimiter;
 import net.dv8tion.jda.core.requests.ratelimit.ClientRateLimiter;
-import net.dv8tion.jda.core.requests.ratelimit.IBucket;
 import net.dv8tion.jda.core.utils.SimpleLog;
-
-import java.util.List;
 
 public class Requester
 {
@@ -167,11 +164,6 @@ public class Requester
     public void shutdown()
     {
         rateLimiter.shutdown();
-    }
-
-    public List<IBucket> shutdownNow()
-    {
-        return rateLimiter.shutdownNow();
     }
 
     private BaseRequest createRequest(Route.CompiledRoute route, String body)

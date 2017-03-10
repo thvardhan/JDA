@@ -43,12 +43,12 @@ public class GuildMemberUpdateHandler extends SocketHandler
     @Override
     protected Long handleInternally(JSONObject content)
     {
-        final long id = Long.parseLong(content.getString("guild_id"));
+        final long id = content.getLong("guild_id");
         if (GuildLock.get(api).isLocked(id))
             return id;
 
         JSONObject userJson = content.getJSONObject("user");
-        final long userId = Long.parseLong(userJson.getString("id"));
+        final long userId = userJson.getLong("id");
         GuildImpl guild = (GuildImpl) api.getGuildMap().get(id);
         if (guild == null)
         {

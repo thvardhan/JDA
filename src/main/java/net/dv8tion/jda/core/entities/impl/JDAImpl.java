@@ -37,7 +37,6 @@ import net.dv8tion.jda.core.managers.AudioManager;
 import net.dv8tion.jda.core.managers.Presence;
 import net.dv8tion.jda.core.managers.impl.PresenceImpl;
 import net.dv8tion.jda.core.requests.*;
-import net.dv8tion.jda.core.requests.ratelimit.IBucket;
 import net.dv8tion.jda.core.utils.MiscUtil;
 import net.dv8tion.jda.core.utils.SimpleLog;
 import org.apache.http.HttpHost;
@@ -123,7 +122,7 @@ public class JDAImpl implements JDA
                 @Override
                 public void run()
                 {
-                    JDAImpl.this.shutdownNow(true);
+                    JDAImpl.this.shutdown(true);
                 }
             });
         }
@@ -549,7 +548,6 @@ public class JDAImpl implements JDA
         shutdown(true);
     }
 
-    //TODO: offer a timeout version.
     @Override
     public void shutdown(boolean free)
     {
@@ -560,6 +558,7 @@ public class JDAImpl implements JDA
             AudioWebSocket.KEEP_ALIVE_POOLS.get(this).shutdownNow();
         getClient().setAutoReconnect(false);
         getClient().close();
+        getRequester().shutdown();
 
         if (free)
         {
@@ -570,29 +569,6 @@ public class JDAImpl implements JDA
             catch (IOException ignored) {}
         }
         setStatus(Status.SHUTDOWN);
-    }
-
-    @Override
-    public List<IBucket> shutdownNow(boolean free)
-    {
-        setStatus(Status.SHUTTING_DOWN);
-        List<IBucket> buckets = getRequester().shutdownNow();
-        audioManagers.valueCollection().forEach(AudioManager::closeAudioConnection);
-        if (AudioWebSocket.KEEP_ALIVE_POOLS.containsKey(this))
-            AudioWebSocket.KEEP_ALIVE_POOLS.get(this).shutdownNow();
-        getClient().setAutoReconnect(false);
-        getClient().close();
-
-        if (free)
-        {
-            try
-            {
-                Unirest.shutdown();
-            }
-            catch (IOException ignored) {}
-        }
-        setStatus(Status.SHUTDOWN);
-        return buckets;
     }
 
     @Override

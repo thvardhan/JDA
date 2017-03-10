@@ -43,7 +43,7 @@ public class CallUpdateHandler extends SocketHandler
     @Override
     protected Long handleInternally(JSONObject content)
     {
-        final long channelId = Long.parseLong(content.getString("channel_id"));
+        final long channelId = content.getLong("channel_id");
         JSONArray ringing = content.getJSONArray("ringing");
         Region region = Region.fromKey(content.getString("region"));
 

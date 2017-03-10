@@ -37,7 +37,7 @@ public class ChannelRecipientAddHandler extends SocketHandler
     @Override
     protected Long handleInternally(JSONObject content)
     {
-        final long groupId = Long.parseLong(content.getString("channel_id"));
+        final long groupId = content.getLong("channel_id");
         JSONObject userJson = content.getJSONObject("user");
 
         GroupImpl group = (GroupImpl) api.asClient().getGroupById(groupId);

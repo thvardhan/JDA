@@ -281,7 +281,7 @@ public class WidgetUtil
                 inviteCode = inviteCode.substring(inviteCode.lastIndexOf("/") + 1);
             
             isAvailable = true;
-            id = Long.parseLong(json.getString("id"));
+            id = json.getLong("id");
             name = json.getString("name");
             invite = inviteCode;
             channels = MiscUtil.newLongMap();
@@ -291,7 +291,7 @@ public class WidgetUtil
             for (int i = 0; i < channelsJson.length(); i++)
             {
                 JSONObject channel = channelsJson.getJSONObject(i);
-                channels.put(Long.parseLong(channel.getString("id")), new VoiceChannel(channel, this));
+                channels.put(channel.getLong("id"), new VoiceChannel(channel, this));
             }
             
             JSONArray membersJson = json.getJSONArray("members");
@@ -301,7 +301,7 @@ public class WidgetUtil
                 Member member = new Member(memberJson, this);
                 if (!memberJson.isNull("channel_id")) // voice state
                 {
-                    VoiceChannel channel = channels.get(Long.parseLong(memberJson.getString("channel_id")));
+                    VoiceChannel channel = channels.get(memberJson.getLong("channel_id"));
                     member.setVoiceState(new VoiceState(channel, 
                             memberJson.getBoolean("mute"), 
                             memberJson.getBoolean("deaf"), 
@@ -489,7 +489,7 @@ public class WidgetUtil
             {
                 this.widget = widget;
                 this.bot = !json.isNull("bot") && json.getBoolean("bot");
-                this.id = Long.parseLong(json.getString("id"));
+                this.id = json.getLong("id");
                 this.username = json.getString("username");
                 this.discriminator = json.getString("discriminator");
                 this.avatar = json.isNull("avatar") ? null : json.getString("avatar");
@@ -707,7 +707,7 @@ public class WidgetUtil
             {
                 this.widget = widget;
                 this.position = json.getInt("position");
-                this.id = Long.parseLong(json.getString("id"));
+                this.id = json.getLong("id");
                 this.name = json.getString("name");
                 this.members = new ArrayList<>();
             }

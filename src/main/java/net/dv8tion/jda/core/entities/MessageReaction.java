@@ -210,7 +210,7 @@ public class MessageReaction
                 for (int i = 0; i < array.length(); i++)
                 {
                     JSONObject json = array.getJSONObject(i);
-                    final long userId = Long.parseLong(json.getString("id"));
+                    final long userId = json.getLong("id");
                     User user = api.getUserMap().get(userId);
                     if (user == null)
                         user = api.getFakeUserMap().get(userId);

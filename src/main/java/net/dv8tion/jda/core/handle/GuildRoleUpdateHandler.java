@@ -35,7 +35,7 @@ public class GuildRoleUpdateHandler extends SocketHandler
     @Override
     protected Long handleInternally(JSONObject content)
     {
-        final long guildId = Long.parseLong(content.getString("guild_id"));
+        final long guildId = content.getLong("guild_id");
         if (GuildLock.get(api).isLocked(guildId))
             return guildId;
 
@@ -49,7 +49,7 @@ public class GuildRoleUpdateHandler extends SocketHandler
             return null;
         }
 
-        final long roleId = Long.parseLong(rolejson.getString("id"));
+        final long roleId = rolejson.getLong("id");
         RoleImpl role = (RoleImpl) guild.getRolesMap().get(roleId);
         if (role == null)
         {

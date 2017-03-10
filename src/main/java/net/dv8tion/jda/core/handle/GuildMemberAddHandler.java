@@ -34,7 +34,7 @@ public class GuildMemberAddHandler extends SocketHandler
     @Override
     protected Long handleInternally(JSONObject content)
     {
-        final long id = Long.parseLong(content.getString("guild_id"));
+        final long id = content.getLong("guild_id");
         if (GuildLock.get(api).isLocked(id))
             return id;
 

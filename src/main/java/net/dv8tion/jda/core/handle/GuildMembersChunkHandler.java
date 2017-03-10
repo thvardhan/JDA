@@ -39,7 +39,7 @@ public class GuildMembersChunkHandler extends SocketHandler
     @Override
     protected Long handleInternally(JSONObject content)
     {
-        final long guildId = Long.parseLong(content.getString("guild_id"));
+        final long guildId = content.getLong("guild_id");
         List<JSONArray> memberChunks = memberChunksCache.get(guildId);
         Integer expectMemberCount = expectedGuildMembers.get(guildId);
 
