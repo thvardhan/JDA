@@ -23,6 +23,7 @@ import java.io.PrintStream;
 import java.time.OffsetDateTime;
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 public class SimpleLog implements Logger
@@ -557,6 +558,6 @@ public class SimpleLog implements Logger
 
     private static String sanitized(Object input)
     {
-        return String.valueOf(input).replace("$", "\\$");
+        return Matcher.quoteReplacement(String.valueOf(input));
     }
 }
