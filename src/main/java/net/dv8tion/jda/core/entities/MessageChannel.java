@@ -596,9 +596,7 @@ public interface MessageChannel extends ISnowflake
                 if (response.isOk())
                     request.onSuccess(null);
                 else
-                {
                     request.onFailure(response);
-                }
             }
         };
     }
@@ -970,7 +968,7 @@ public interface MessageChannel extends ISnowflake
      *             <li>If provided {@code emote} is {@code null}</li>
      *         </ul>
      * @throws net.dv8tion.jda.core.exceptions.PermissionException
-     *         If the MessageChannel this message was sent in was a {@link net.dv8tion.jda.core.entities.TextChannel TextChannel
+     *         If the MessageChannel this message was sent in was a {@link net.dv8tion.jda.core.entities.TextChannel TextChannel}
      *         and the logged in account does not have
      *         <ul>
      *             <li>{@link net.dv8tion.jda.core.Permission#MESSAGE_ADD_REACTION Permission.MESSAGE_ADD_REACTION}</li>

@@ -453,7 +453,7 @@ public class WebSocketClient extends WebSocketAdapter implements WebSocketListen
         JSONObject content = new JSONObject(message);
         int opCode = content.getInt("op");
 
-        if (content.has("s") && !content.isNull("s"))
+        if (!content.isNull("s"))
         {
             api.setResponseTotal(content.getInt("s"));
         }
