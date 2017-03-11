@@ -45,7 +45,7 @@ public class MessageReactionHandler extends SocketHandler
         JSONObject emoji = content.getJSONObject("emoji");
 
         final long userId    = content.getLong("user_id");
-        final long messageId = content.getLong("id");
+        final long messageId = content.getLong("message_id");
         final long channelId = content.getLong("channel_id");
 
         final Long emojiId = emoji.isNull("id") ? null : emoji.getLong("id");

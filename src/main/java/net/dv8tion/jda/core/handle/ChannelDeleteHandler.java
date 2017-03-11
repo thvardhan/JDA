@@ -47,13 +47,14 @@ public class ChannelDeleteHandler extends SocketHandler
         ChannelType type = ChannelType.fromId(content.getInt("type"));
 
         long guildId = 0;
-        final long channelId = content.getLong("id");
         if (type.isGuild())
         {
             guildId = content.getLong("guild_id");
             if (GuildLock.get(api).isLocked(guildId))
                 return guildId;
         }
+
+        final long channelId = content.getLong("id");
 
         switch (type)
         {
